@@ -36,7 +36,7 @@ export default defineConfig({
       },
     }),
   ],
-  base: '/<siteTestPerformance>/',
+  base: '/siteTestPerformance/',
   optimizeDeps: {
     exclude: [
       'vuetify',
