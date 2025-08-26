@@ -1,0 +1,50 @@
+# Nome do Workflow
+name: Deploy Vue app to GitHub Pages
+
+# Gatilho
+on:
+  push:
+    branches: [ "main" ] # Verifique se a sua branch é "main"
+  workflow_dispatch:
+
+# Permissões
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Tarefas
+jobs:
+  deploy: # <-- Nível 1 de indentação (2 espaços)
+    environment: # <-- Nível 2 de indentação (4 espaços)
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps: # <-- Nível 2 de indentação (4 espaços)
+      # Cada hífen (-) marca o início de um item de lista
+      - name: Checkout # <-- Nível 3 de indentação (6 espaços)
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
